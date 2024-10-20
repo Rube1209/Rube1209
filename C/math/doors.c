@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -9,19 +8,19 @@ int simulateChange(int N) {
     for (int i = 0; i < N; i++) {
         int carDoor = rand() % 3;  // 汽车在三扇门的随机位置
         int playerChoice = rand() % 3; // 玩家随机选择一扇门
-        int openedGoatDoor;
-        
-        // 主持人打开一扇有山羊的门
+        int openedGoatDoor;  // 主持人打开一扇有山羊的门
+
+        // 主持人不能打开有车的门，也不能打开玩家选择的门
         do {
             openedGoatDoor = rand() % 3;
         } while (openedGoatDoor == carDoor || openedGoatDoor == playerChoice);
-        
+
         // 玩家选择更改门后的结果
         int changedChoice;
         do {
             changedChoice = rand() % 3;
         } while (changedChoice == playerChoice || changedChoice == openedGoatDoor);
-        
+
         // 检查玩家是否赢得汽车
         if (changedChoice == carDoor) {
             winCount++;
@@ -51,6 +50,7 @@ int main() {
 
     // 模拟更改门的情况
     int winsWithChange = simulateChange(N);
+
     // 模拟不更改门的情况
     int winsWithoutChange = simulateNoChange(N);
 
