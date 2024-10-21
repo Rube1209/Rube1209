@@ -1,1 +1,77 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Matrix {
+private:
+    vector<vector<double>> A; // 矩阵成员变量
+
+public:
+    // 构造函数
+    Matrix(int n) : A(n, vector<double>(n)) {}
+
+    // 获取矩阵元素
+    void getMatrix() {
+        int n;
+        double x;
+        cout << "Please enter the size of the Matrix: ";
+        cin >> n;
+
+        // 重新定义矩阵大小
+        A.resize(n, vector<double>(n));
+        cout << "Please enter the elements of the Matrix (row-wise):" << endl;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cin >> A[i][j];
+            }
+        }
+    }
+
+    // 计算行列式
+    double determinant(int n) {
+        // 基本情况：如果是 1x1 矩阵
+        if (n == 1) {
+            return A[0][0];
+        }
+        // 基本情况：如果是 2x2 矩阵
+        else if (n == 2) {
+            return A[0][0] * A[1][1] - A[0][1] * A[1][0];
+        }
+        // 递归情况：n > 2
+        else {
+            double det = 0.0;
+            for (int i = 0; i < n; i++) {
+                // 创建子矩阵 B
+                vector<vector<double>> B(n - 1, vector<double>(n - 1));
+                for (int j = 1; j < n; j++) { // 从第二行开始
+                    int p = 0;
+                    for (int k = 0; k < n; k++) {
+                        if (k == i) continue; // 跳过当前列
+                        B[j - 1][p] = A[j][k];
+                        p++;
+                    }
+                }
+                // 递归计算行列式，使用 cofactor 进行加减
+                det += (i % 2 == 0 ? 1 : -1) * A[0][i] * determinant(B, n - 1);
+            }
+            return det;
+        }
+    }
+};
+
+int main() {
+    int n;
+    cout << "Enter the size of the matrix: ";
+    cin >> n;
+    
+    Matrix matrix(n);
+    matrix.getMatrix();
+    
+    double result = matrix.determinant(n);
+    cout << "Determinant: " << result << endl;
+    
+    return 0;
+}
 
