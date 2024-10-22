@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100  // 堆栈的最大容量
+#define MAX_DISKS 10 // 允许的最大盘子数量
+
+typedef struct {
+    int data[MAX];  // 存储堆栈元素的数组
+    int top;  // 堆栈顶指针
+} Stack;
+
+// 初始化堆栈
+void init(Stack *s) {
+    s->top = -1;
+}
+
+// 检查堆栈是否为空
+int isEmpty(Stack *s) {
+    return s->top == -1;
+}
+
+// 入栈操作
+void push(Stack *s, int value) {
+    s->data[++(s->top)] = value;
+}
+
+// 出栈操作
+int pop(Stack *s) {
+    return s->data[(s->top)--];
+}
+
+// 汉诺塔结构体
+typedef struct {
+    Stack pillars[3];  // 三根柱子
+} TowerOfHanoi;
+
+// 初始化汉诺塔
+void initTower(TowerOfHanoi *tower, int numDisks) {
+    for (int i = 0; i < 3; i++) {
+        init(&tower->pillars[i]);
+    }
+    for (int i = numDisks; i >= 1; i--) {
+        push(&tower->pillars[0], i);
+    }
+}
+
+// 状态记录
+typedef struct {
+    int moveNum;
+    int from;
+    int to;
+} Move;
+
+// 汉诺塔移动并记录状态
+void move(int n, TowerOfHanoi *tower, int from, int to, int temp, Move *moves, int *moveCount) {
+    if (n == 1) {
+        int disk = pop(&tower->pillars[from]);
+        push(&tower->pillars[to], disk);
+        moves[*moveCount].moveNum = ++(*moveCount);
+        moves[*moveCount].from = from + 1;  // 记录从第几根柱子移动
+        moves[*moveCount].to = to + 1;      // 记录到第几根柱子
+        return;
+    }
+    move(n - 1, tower, from, temp, to, moves, moveCount);
+    move(1, tower, from, to, temp, moves, moveCount);
+    move(n - 1, tower, temp, to, from, moves, moveCount);
+}
+
+void printMoves(Move *moves, int moveCount) {
+    for (int i = 0; i < moveCount; i++) {
+        printf("Move %d: disk from pillar %d to pillar %d\n", moves[i].moveNum, moves[i].from, moves[i].to);
+    }
+}
+
+int main() {
+    TowerOfHanoi tower;
+    Move moves[MAX_DISKS * MAX_DISKS]; // 存储移动状态
+    int moveCount = 0;
+
+    int numDisks = 3; // 设定盘子数量
+    initTower(&tower, numDisks);
+    move(numDisks, &tower, 0, 2, 1, moves, &moveCount); // 从柱子 0 移动到 2，1 为临时柱子
+    printMoves(moves, moveCount);
+
+    return 0;
+}
