@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;  // 节点数据
+    struct Node *left;  // 左子树
+    struct Node *right;  // 右子树
+} Node;
+
+// 创建新节点
+Node* createNode(int data) {
+    Node *newNode = (Node *)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// 生成二叉树
+Node* buildTree(int depth, int *current) {
+    if (depth <= 0) return NULL;
+
+    Node *root = createNode((*current)++);
+    root->left = buildTree(depth - 1, current);
+    root->right = buildTree(depth - 1, current);
+    return root;
+}
+
+// 打印二叉树
+void printTree(Node *root, int space) {
+    if (root == NULL) return;
+
+    // 增加缩进
+    space += 5;
+
+    // 先打印右子树
+    printTree(root->right, space);
+
+    // 打印当前节点
+    printf("\n");
+    for (int i = 5; i < space; i++) {
+        printf(" "); // 添加空格缩进
+    }
+    printf("(%d)\n", root->data); // 打印节点数据
+
+    // 打印左子树
+    printTree(root->left, space);
+}
+
+int main() {
+    int depth;
+    printf("Enter the depth of the binary tree: ");
+    scanf("%d", &depth);
+
+    int current = 1; // 用于生成节点数据
+    Node *root = buildTree(depth, &current);
+    printf("Binary Tree:\n");
+    printTree(root, 0); // 从根节点开始打印
+
+    return 0;
+}
