@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Weather</title>
+</head>
+<body>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Weather</th>
+    </tr>
+    </thead>
+    <tbody id="weather-table">
+    </tbody>
+</table>
+
+<script>
+    function getRandomWeather() {
+        const weather = ["Raining", "Sunny", "Cloudy", "Windy", "Snowy"];
+        return weather[Math.floor(Math.random() * weather.length)];
+    }
+
+    function getDayOfWeek(i) {
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        return days[i];
+    }
+
+    function generateWeatherTable() {
+        const tableBody = document.getElementById("weather-table");
+        for (let i = 0; i < 7; i++) {
+            const row = document.createElement("tr");
+            const dateCell = document.createElement("td");
+            const weatherCell = document.createElement("td");
+
+            dateCell.textContent = getDayOfWeek(i);
+            weatherCell.textContent = getRandomWeather();
+
+            row.appendChild(dateCell);
+            row.appendChild(weatherCell);
+            tableBody.appendChild(row);
+        }
+    }
+
+    generateWeatherTable();
+</script>
+</body>
+</html>
